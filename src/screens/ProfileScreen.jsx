@@ -1,18 +1,25 @@
 import React, {useState} from 'react';
 import {View, Text, Switch, Pressable, StyleSheet, Alert} from 'react-native';
 import CommonHeader from '../components/CommonHeader';
-
+import auth from '@react-native-firebase/auth';
 export default function SettingsScreen({navigation}) {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
 
+  const handleout = async () => {
+    try {
+      await auth().signOut();
+    } catch (error) {
+      console.log('Logout Error:', error.message);
+    }
+  };
   const handleLogout = () => {
     Alert.alert(
       'Logout',
       'Are you sure you want to log out?',
       [
         {text: 'Cancel', style: 'cancel'},
-        {text: 'Logout', onPress: () => navigation.replace('Login')},
+        {text: 'Logout', onPress: () => handleout()},
       ],
       {cancelable: true},
     );

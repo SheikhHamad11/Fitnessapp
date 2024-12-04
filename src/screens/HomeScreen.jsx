@@ -11,109 +11,90 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import CommonHeader from '../components/CommonHeader';
 const HomeScreen = ({navigation}) => {
-  const categories = [
-    {title: 'Full Body Workout', image: require('../images/3.jpg')},
-    {title: 'Abs Workout', image: require('../images/4.jpg')},
-    {title: 'Legs Workout', image: require('../images/5.jpg')},
-    {title: 'Arms Workout', image: require('../images/6.jpg')},
-    {title: 'Arms Workout', image: require('../images/6.jpg')},
-  ];
-
   const [activeTab, setActiveTab] = useState('Beginner');
 
   const workoutData = {
     Beginner: [
-      {title: 'Full Body Workout', image: require('../images/3.jpg')},
-      {title: 'Abs Workout', image: require('../images/4.jpg')},
-      {title: 'Legs Workout', image: require('../images/5.jpg')},
-      {title: 'Arms Workout', image: require('../images/6.jpg')},
+      {id: 1, title: 'Full Body Workout', image: require('../images/3.jpg')},
+      {id: 2, title: 'Abs Workout', image: require('../images/4.jpg')},
+      {id: 3, title: 'Legs Workout', image: require('../images/5.jpg')},
+      {id: 4, title: 'Arms Workout', image: require('../images/6.jpg')},
     ],
     Intermediate: [
-      {title: 'Full Body Workout', image: require('../images/3.jpg')},
-      {title: 'Abs Workout', image: require('../images/4.jpg')},
-      {title: 'Legs Workout', image: require('../images/5.jpg')},
-      {title: 'Arms Workout', image: require('../images/6.jpg')},
+      {id: 5, title: 'Full Body Workout', image: require('../images/3.jpg')},
+      {id: 6, title: 'Abs Workout', image: require('../images/4.jpg')},
+      {id: 7, title: 'Legs Workout', image: require('../images/5.jpg')},
+      {id: 8, title: 'Arms Workout', image: require('../images/6.jpg')},
     ],
     Advanced: [
-      {title: 'Full Body Workout', image: require('../images/3.jpg')},
-      {title: 'Abs Workout', image: require('../images/4.jpg')},
-      {title: 'Legs Workout', image: require('../images/5.jpg')},
-      {title: 'Arms Workout', image: require('../images/6.jpg')},
+      {id: 9, title: 'Full Body Workout', image: require('../images/3.jpg')},
+      {id: 10, title: 'Abs Workout', image: require('../images/4.jpg')},
+      {id: 11, title: 'Legs Workout', image: require('../images/5.jpg')},
+      {id: 12, title: 'Arms Workout', image: require('../images/6.jpg')},
     ],
   };
 
   return (
     <>
       <CommonHeader title="HOME WORKOUT" />
-      <ScrollView style={styles.container}>
-        {/* Header */}
-        {/* <View style={styles.header}>
-        <Text style={styles.headerTitle}>HOME WORKOUT</Text>
-        <Icon name="fire" size={25} color="orange" />
-      </View> */}
-
-        {/* Hero Section */}
-        <View style={styles.heroSection}>
-          <Image source={require('../images/1.jpg')} style={styles.heroImage} />
-          <Text style={styles.heroText}>Your Fitness Journey Starts Here!</Text>
-        </View>
-        {/* Tabs Section */}
-        <View style={styles.tabContainer}>
-          {['Beginner', 'Intermediate', 'Advanced'].map(tab => (
-            <>
-              <Pressable
-                key={tab}
-                style={[
-                  styles.tabButton,
-                  activeTab === tab && styles.activeTab,
-                ]}
-                onPress={() => setActiveTab(tab)}>
-                <Text
+      <FlatList
+        ListHeaderComponent={
+          <>
+            <View style={styles.heroSection}>
+              <Image
+                source={require('../images/1.jpg')}
+                style={styles.heroImage}
+              />
+              <Text style={styles.heroText}>
+                Your Fitness Journey Starts Here!
+              </Text>
+            </View>
+            <View style={styles.tabContainer}>
+              {['Beginner', 'Intermediate', 'Advanced'].map(tab => (
+                <Pressable
+                  key={tab}
                   style={[
-                    styles.tabText,
-                    activeTab === tab && styles.activeTabText,
-                  ]}>
-                  {tab}
-                </Text>
-              </Pressable>
-            </>
-          ))}
-        </View>
-        {/* Workout List */}
-        <Text style={{fontSize: 18, fontWeight: '600', marginVertical: 10}}>
-          {activeTab}
-        </Text>
-        <FlatList
-          style={{marginBottom: 20}}
-          data={workoutData[activeTab]}
-          keyExtractor={item => item.id}
-          renderItem={({item, index}) => (
-            <>
-              <Pressable
-                key={index}
-                style={styles.categoriesContainer}
-                onPress={() =>
-                  navigation.navigate('WorkoutDetails', {
-                    image: item.image,
-                    name: item.title,
-                  })
-                }>
-                <Image source={item.image} style={styles.categoryImage} />
-                <Text style={styles.categoryTitle}>{item.title}</Text>
-              </Pressable>
-            </>
-          )}
-        />
-
-        {/* <View style={styles.categoriesContainer}>
-        {categories.map((category, index) => (
-          <Pressable key={index} style={styles.categoryCard}>
-            <Image source={category.image} style={styles.categoryImage} />
-            <Text style={styles.categoryTitle}>{category.title}</Text>
-          </Pressable>
-        ))}
-      </View> */}
-      </ScrollView>
+                    styles.tabButton,
+                    activeTab === tab && styles.activeTab,
+                  ]}
+                  onPress={() => setActiveTab(tab)}>
+                  <Text
+                    style={[
+                      styles.tabText,
+                      activeTab === tab && styles.activeTabText,
+                    ]}>
+                    {tab}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+            <Text style={{fontSize: 18, fontWeight: '600', marginVertical: 10}}>
+              {activeTab}
+            </Text>
+          </>
+        }
+        style={{marginHorizontal: 10}}
+        data={workoutData[activeTab]}
+        keyExtractor={item => item.id}
+        nestedScrollEnabled={true}
+        renderItem={({item, index}) => (
+          <>
+            <Pressable
+              key={index}
+              style={styles.categoriesContainer}
+              onPress={() =>
+                navigation.navigate('WorkoutDetails', {
+                  image: item.image,
+                  name: item.title,
+                })
+              }>
+              <Image source={item.image} style={styles.categoryImage} />
+              <Text style={styles.categoryTitle}>{item.title}</Text>
+            </Pressable>
+          </>
+        )}
+        ListFooterComponent={<View style={{height: 20}} />}
+      />
     </>
   );
 };
