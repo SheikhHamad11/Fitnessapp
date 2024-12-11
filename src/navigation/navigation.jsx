@@ -11,6 +11,7 @@ import ReportScreen from '../screens/ReportScreen';
 import DiscoverScreen from '../screens/DiscoverScreen';
 import {StatusBar} from 'react-native';
 import WorkoutDetailsScreen from '../screens/WorkoutDetails';
+import WorkoutTimerScreen from '../screens/WorkoutTimer';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -19,15 +20,14 @@ export default function App() {
     return (
       <>
         <StatusBar
-          backgroundColor="white" // Background color for Android
-          barStyle="dark-content" // Content style for both Android and iOS (use "dark-content" for dark text/icons)
+          backgroundColor="#152B43" // Background color for Android
+          barStyle="light-content" // Content style for both Android and iOS (use "dark-content" for dark text/icons)
         />
         <Tab.Navigator
           initialRouteName="Home"
           screenOptions={({route}) => ({
             tabBarIcon: ({focused, color, size}) => {
               let iconName;
-
               if (route.name === 'Home') {
                 iconName = focused ? 'home' : 'home-outline';
               } else if (route.name === 'Discover') {
@@ -55,11 +55,10 @@ export default function App() {
             tabBarHideOnKeyboard: true,
           })}>
           <Tab.Screen name="Home" component={HomeScreen} />
-
           <Tab.Screen name="Discover" component={DiscoverScreen} />
           <Tab.Screen name="Report" component={ReportScreen} />
-          <Tab.Screen name="Profile" component={ProfileScreen} />
           <Tab.Screen name="Search" component={SearchScreen} />
+          <Tab.Screen name="Profile" component={ProfileScreen} />
         </Tab.Navigator>
       </>
     );
@@ -69,6 +68,7 @@ export default function App() {
       screenOptions={{headerShown: false, initialRouteName: 'Tabs'}}>
       <Stack.Screen name="Tabs" component={Tabs} />
       <Stack.Screen name="WorkoutDetails" component={WorkoutDetailsScreen} />
+      <Stack.Screen name="WorkoutTimer" component={WorkoutTimerScreen} />
     </Stack.Navigator>
   );
 }

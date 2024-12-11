@@ -1,4 +1,11 @@
-import {React, createContext, useContext, useEffect, useState} from 'react';
+import {
+  React,
+  createContext,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import auth from '@react-native-firebase/auth';
 export const AuthContext = createContext();
 
@@ -8,7 +15,7 @@ export default function AuthProvider({children}) {
   const [user, setUser] = useState(null);
 
   // Listen for authentication state changes
-  useEffect(() => {
+  useLayoutEffect(() => {
     const unsubscribe = auth().onAuthStateChanged(user => {
       setUser(user);
     });

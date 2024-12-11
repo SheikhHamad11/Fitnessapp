@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import CommonHeader from '../components/CommonHeader';
+import Carousel from '../components/Carousal';
 const HomeScreen = ({navigation}) => {
   const [activeTab, setActiveTab] = useState('Beginner');
 
@@ -36,15 +37,16 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <>
-      <CommonHeader title="HOME WORKOUT" />
+      <CommonHeader title={'Home Workout'} />
       <FlatList
         ListHeaderComponent={
           <>
             <View style={styles.heroSection}>
-              <Image
+              {/* <Image
                 source={require('../images/1.jpg')}
                 style={styles.heroImage}
-              />
+              /> */}
+              <Carousel />
               <Text style={styles.heroText}>
                 Your Fitness Journey Starts Here!
               </Text>
@@ -86,6 +88,7 @@ const HomeScreen = ({navigation}) => {
                 navigation.navigate('WorkoutDetails', {
                   image: item.image,
                   name: item.title,
+                  id: item.id,
                 })
               }>
               <Image source={item.image} style={styles.categoryImage} />
@@ -158,6 +161,7 @@ const styles = StyleSheet.create({
   heroSection: {
     marginTop: 20,
     alignItems: 'center',
+    borderTopLeftRadius: 10,
   },
   heroImage: {
     width: '100%',

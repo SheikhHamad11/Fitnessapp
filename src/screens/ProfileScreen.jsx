@@ -33,6 +33,11 @@ export default function SettingsScreen({navigation}) {
         <View style={styles.settingItem}>
           <Text style={styles.settingText}>Enable Notifications</Text>
           <Switch
+            trackColor={{
+              false: 'gray', // Color when the switch is off
+              true: 'lightgray', // Color when the switch is on
+            }}
+            thumbColor={notificationsEnabled ? '#152B43' : 'white'} // Thumb color based on state
             value={notificationsEnabled}
             onValueChange={value => setNotificationsEnabled(value)}
           />
@@ -42,7 +47,11 @@ export default function SettingsScreen({navigation}) {
         <View style={styles.settingItem}>
           <Text style={styles.settingText}>Dark Mode</Text>
           <Switch
-            style={{color: 'red'}}
+            trackColor={{
+              false: 'gray', // Color when the switch is off
+              true: 'lightgray', // Color when the switch is on
+            }}
+            thumbColor={darkModeEnabled ? '#152B43' : 'white'}
             value={darkModeEnabled}
             onValueChange={value => setDarkModeEnabled(value)}
           />

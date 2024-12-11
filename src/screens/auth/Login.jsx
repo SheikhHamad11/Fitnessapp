@@ -5,34 +5,127 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import styles from './styles';
 import {useAuth} from '../../components/AuthContext';
 import auth from '@react-native-firebase/auth';
+import ReactNativeBiometrics, {BiometryTypes} from 'react-native-biometrics';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
   const {login} = useAuth();
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
   // Handle Login
+
+  const rnBiometrics = new ReactNativeBiometrics();
+
+  // Save login details securely
+  const saveLoginDetails = async (email, password) => {
+    try {
+      await AsyncStorage.setItem(
+        'userCredentials',
+        JSON.stringify({email, password}),
+      );
+    } catch (error) {
+      console.error('Failed to save credentials:', error);
+    }
+  };
+
+  // Biometric login logic
+  const handleBiometricLogin = async () => {
+    try {
+      // Start loading
+      rnBiometrics.isSensorAvailable().then(async resultObject => {
+        const {available, biometryType} = resultObject;
+        if (!available) {
+          setLoading(false); // Stop loading
+          Alert.alert(
+            'Error',
+            'Biometric authentication is not available on this device.',
+          );
+          return;
+        }
+        const {success} = await rnBiometrics.simplePrompt({
+          promptMessage: 'Confirm your identity',
+          cancelButtonText: 'Cancel',
+        });
+
+        if (available && biometryType === BiometryTypes.TouchID) {
+          alert('TouchID is supported');
+        } else if (available && biometryType === BiometryTypes.FaceID) {
+          alert('FaceID is supported');
+        } else if (available && biometryType === BiometryTypes.Biometrics) {
+          alert('Biometrics is supported');
+        } else {
+          alert('Biometrics not supported');
+        }
+
+        if (success) {
+          setLoading(true);
+          const credentials = await AsyncStorage.getItem('userCredentials');
+          if (credentials) {
+            const {email, password} = JSON.parse(credentials);
+
+            // Simulate login process
+            const userCredential = await auth().signInWithEmailAndPassword(
+              email,
+              password,
+            );
+            setLoading(false); // Stop loading
+            // Alert.alert(
+            //   'Authentication Successful',
+            //   `Welcome back, ${userCredential.user.email}!`,
+            // );
+          } else {
+            setLoading(false); // Stop loading
+            Alert.alert(
+              'Error',
+              'No saved credentials found. Please log in with email and password first.',
+            );
+          }
+        } else {
+          setLoading(false); // Stop loading
+          Alert.alert(
+            'Authentication Failed',
+            'Biometric authentication was canceled.',
+          );
+        }
+      });
+    } catch (error) {
+      setLoading(false); // Stop loading
+      Alert.alert('Error', error.message);
+    }
+  };
+
+  // Standard login logic
   const handleLogin = async () => {
-    if (!email && !password) {
-      Alert.alert('Please Fill both', 'Error');
+    if (!email || !password) {
+      Alert.alert('Error', 'Please enter both email and password.');
       return;
     }
+
     try {
+      setLoading(true);
       const userCredential = await auth().signInWithEmailAndPassword(
         email,
         password,
       );
       setUser(userCredential.user);
-      Alert.alert('Success', 'User logged in successfully!');
+
+      // Save credentials after successful login
+      await saveLoginDetails(email, password);
+      setLoading(false);
+      Alert.alert('Success', `Welcome, ${userCredential.user.email}!`);
     } catch (error) {
       Alert.alert('Login Error', error.message);
+      setLoading(false);
     }
   };
 
@@ -49,7 +142,7 @@ export default function Login() {
       <Text style={styles.text2}>Email</Text>
       <View style={styles.action}>
         <FontAwesome
-          name="user-o"
+          name="user"
           size={25}
           color="black"
           style={styles.smallIcon}
@@ -86,7 +179,11 @@ export default function Login() {
         </Text>
       </View>
       <TouchableOpacity style={styles.inBut} onPress={handleLogin}>
-        <Text style={styles.textSign}>Log in</Text>
+        {loading ? (
+          <ActivityIndicator size={25} color="white" />
+        ) : (
+          <Text style={styles.textSign}>Log in</Text>
+        )}
       </TouchableOpacity>
       <View style={styles.register}>
         <Text style={{fontSize: 14, fontWeight: 'bold', color: '#919191'}}>
@@ -97,18 +194,16 @@ export default function Login() {
         </TouchableOpacity>
       </View>
       <Text style={styles.continuewith}>----Or Continue with----</Text>
-      <View style={styles.inBut2}>
-        <FontAwesome name="google" style={styles.smallIcon} />
-        <TouchableOpacity>
-          <Text style={styles.textSign2}>Continue with Google</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.inBut2}>
+
+      <TouchableOpacity style={styles.inBut2} onPress={handleBiometricLogin}>
+        <FontAwesome name="fingerprint" style={styles.smallIcon} />
+        <Text style={styles.textSign2}>Biometric login</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.inBut2}>
         <FontAwesome name="apple" style={styles.smallIcon} />
-        <TouchableOpacity>
-          <Text style={styles.textSign2}>Continue with Apple</Text>
-        </TouchableOpacity>
-      </View>
+        <Text style={styles.textSign2}>Continue with Apple</Text>
+      </TouchableOpacity>
     </View>
   );
 }
