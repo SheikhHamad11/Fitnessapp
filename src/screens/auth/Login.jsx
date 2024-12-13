@@ -7,7 +7,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import styles from './styles';
@@ -15,6 +15,7 @@ import {useAuth} from '../../components/AuthContext';
 import auth from '@react-native-firebase/auth';
 import ReactNativeBiometrics, {BiometryTypes} from 'react-native-biometrics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -101,6 +102,35 @@ export default function Login() {
     } catch (error) {
       setLoading(false); // Stop loading
       Alert.alert('Error', error.message);
+    }
+  };
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '940797699192-rrpcuo3bpd381ld4kv8bln344do080sr.apps.googleusercontent.com',
+    });
+  }, []);
+
+  const handleGoogleLogin = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log({userInfo});
+      // const {idToken} = await GoogleSignin.getTokens();
+      // const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      // const userCredential = await auth().signInWithCredential(
+      //   googleCredential,
+      // );
+
+      setUser(userCredential.user);
+      Alert.alert(
+        'Login Success',
+        `Welcome ${userCredential.user.displayName}`,
+      );
+    } catch (error) {
+      Alert.alert('Login Error', error.message);
+      console.log('error', error);
     }
   };
 
@@ -200,10 +230,12 @@ export default function Login() {
         <Text style={styles.textSign2}>Biometric login</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.inBut2}>
-        <FontAwesome name="apple" style={styles.smallIcon} />
-        <Text style={styles.textSign2}>Continue with Apple</Text>
+      <TouchableOpacity style={styles.inBut2} onPress={handleGoogleLogin}>
+        <FontAwesome name="google" style={styles.smallIcon} />
+        <Text style={styles.textSign2}>Continue with Google</Text>
       </TouchableOpacity>
     </View>
   );
 }
+
+// 9e:ba:cc:2d:62:a2:22:f3:7e:17:45:fe:4b:9c:fc:68:fd:e9:e0:69:62:04:71:ac:b1:0c:f4:47:03:3a:98:78

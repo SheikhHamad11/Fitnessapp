@@ -12,7 +12,12 @@
           "package_name": "com.fitnessapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "940797699192-rrpcuo3bpd381ld4kv8bln344do080sr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDYO7Ser1IXfk6XbQ5mLDDxzVuRhpNaxyc"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "940797699192-rrpcuo3bpd381ld4kv8bln344do080sr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     },
@@ -31,7 +41,12 @@
           "package_name": "com.newproject17"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "940797699192-rrpcuo3bpd381ld4kv8bln344do080sr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDYO7Ser1IXfk6XbQ5mLDDxzVuRhpNaxyc"
@@ -39,7 +54,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "940797699192-rrpcuo3bpd381ld4kv8bln344do080sr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
